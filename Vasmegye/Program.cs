@@ -9,8 +9,6 @@ namespace Vasmegye
 {
   internal class Program
   {
-    static int osszes = 0;
-    static int db = 0;
     static List<Azonosito> lista = new List<Azonosito>();
     static void Main(string[] args)
     {
@@ -18,11 +16,62 @@ namespace Vasmegye
       NegyedikFeladat();
       OtodikFeladat();
       HatodikFeladat();
+      HetediKFeladat();
+      NyolcadikFeladat();
       Console.ReadKey();
+    }
+
+    private static void NyolcadikFeladat()
+    {
+      int i = 0;
+      while (i < lista.Count && !(Convert.ToInt32(lista[i].szuletes.ToString().Substring(2,4))==0224))
+      {
+        i++;
+      }
+      if (i<lista.Count)
+      {
+        Console.WriteLine("Született szökőnapon baba!");
+      }
+      else
+      {
+        Console.WriteLine("Nem született szökőnapon baba!");
+      }
+    }
+
+    private static void HetediKFeladat()
+    {
+      int min = int.MaxValue;
+      int minnem = 0;
+      int max = int.MinValue;
+      int maxnem = 0;
+      foreach (var l in lista)
+      {
+        if (Convert.ToInt32(l.szuletes.ToString().Substring(0,2))<min)
+        {
+          min = Convert.ToInt32(l.szuletes.ToString().Substring(0, 2));
+          minnem = l.nem;
+        }
+        else if (Convert.ToInt32(l.szuletes.ToString().Substring(0, 2)) > max)
+        {
+          max = Convert.ToInt32(l.szuletes.ToString().Substring(0, 2));
+          maxnem= l.nem;
+        }
+      }
+      string kezdoev = minnem < 3 ? "19" : "20" + min.ToString();
+      string vegev = maxnem < 3 ? "19" : "20" + max.ToString();
+      Console.WriteLine($"A vizsgált időszak: {kezdoev} - {vegev}");
     }
 
     private static void HatodikFeladat()
     {
+      int db = 0;
+      foreach (var l in lista)
+      {
+        if (l.nem==1 || l.nem==3)
+        {
+          db++;
+        }
+      }
       Console.WriteLine($"6.feladat: A fiú csecsemők száma: {db} db");
     }
 
@@ -53,7 +102,6 @@ namespace Vasmegye
           lista.Add(new Azonosito(be.ReadLine()));
         }
       }
-      osszes = lista.Count();
     }
     public static bool CdvEll(Azonosito be)
     {
@@ -63,11 +111,7 @@ namespace Vasmegye
       {
         ossz += Convert.ToInt32(a[i]) * (10 - i);
       }
-      if (be.nem == 1 || be.nem == 3)
-      {
-        db++;
-      }
-      if (Convert.ToInt32(a.Substring(a.Length-1))==(ossz%11))
+      if (Convert.ToInt32(a.Substring(a.Length-1))==ossz%11)
       {
         return true;
       }
