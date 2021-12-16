@@ -16,50 +16,130 @@ namespace Vasmegye
       NegyedikFeladat();
       OtodikFeladat();
       HatodikFeladat();
-      HetediKFeladat();
+      HetedikFeladat();
       NyolcadikFeladat();
+      KilencedikFeladat();
+      TizesFeladat();
+      TizenegyesFeladat();
+      TizenKettesFeladat();
       Console.ReadKey();
+    }
+
+    private static void TizenKettesFeladat()
+    {
+      using (StreamWriter ki = new StreamWriter("lanyok.txt"))
+      {
+        foreach (var l in lista)
+        {
+          if (l.nem % 2 == 0)
+          {
+            ki.WriteLine($"{l.nem}-{l.szuletes}-{l.megkulonbozteto}");
+          }
+        }
+      }
+      using (StreamWriter ki = new StreamWriter("fiuk.txt"))
+      {
+        foreach (var l in lista)
+        {
+          if (l.nem % 2 != 0)
+          {
+            ki.WriteLine($"{l.nem}-{l.szuletes}-{l.megkulonbozteto}");
+          }
+        }
+      }
+    }
+
+    private static void TizenegyesFeladat()
+    {
+      Console.WriteLine($"11 feladat: {lista.Count(x => x.nem > 2)} db gyerek született 2000 után.");
+
+    }
+
+    private static void TizesFeladat()
+    {
+      Dictionary<int, int> stat = new Dictionary<int, int>();
+      foreach (var l in lista)
+      {
+        if (stat.ContainsKey(Convert.ToInt32(l.szuletes.Substring(2,4))))
+        {
+          stat[Convert.ToInt32(l.szuletes.Substring(2, 4))]++;
+        }
+        else
+        {
+          stat.Add(Convert.ToInt32(l.szuletes.Substring(2, 4)),1);
+        }
+      }
+      int legnagyobbhonap = 0101;
+      foreach (var s in stat)
+      {
+        if (s.Value>stat[legnagyobbhonap])
+        {
+          legnagyobbhonap = s.Key;
+        }
+      }
+      Console.WriteLine($"10.feladat: Ezen a napon született a legtöbb ember: {legnagyobbhonap.ToString().Substring(0,2)}.{legnagyobbhonap.ToString().Substring(2)}.");
+    }
+
+    private static void KilencedikFeladat()
+    {
+      Dictionary<string, int> stat = new Dictionary<string, int>();
+      foreach (var l in lista)
+      {
+        if (stat.ContainsKey(l.szuletes.Substring(0,2)))
+        {
+          stat[l.szuletes.Substring(0, 2)]++;
+        }
+        else
+        {
+          stat.Add(l.szuletes.Substring(0, 2),1);
+        }
+      }
+      Console.WriteLine("9.feladat: ");
+      foreach (var s in stat)
+      {
+        Console.WriteLine( Convert.ToInt32(s.Key) > 21 ? "\t19" + s.Key + " - " + s.Value + " db" : "\t20" + s.Key + " - " + s.Value + " db");
+      }
     }
 
     private static void NyolcadikFeladat()
     {
       int i = 0;
-      while (i < lista.Count && !(Convert.ToInt32(lista[i].szuletes.ToString().Substring(2,4))==0224))
+      while (i < lista.Count && !(Convert.ToDouble(lista[i].szuletes.Substring(2,4))==0224) && !(Convert.ToInt32(lista[i].szuletes.Substring(0,2))%4==0))
       {
         i++;
       }
       if (i<lista.Count)
       {
-        Console.WriteLine("Született szökőnapon baba!");
+        Console.WriteLine("8.feladat: Született szökőnapon baba!");
       }
       else
       {
-        Console.WriteLine("Nem született szökőnapon baba!");
+        Console.WriteLine("8.feladat: Nem született szökőnapon baba!");
       }
     }
 
-    private static void HetediKFeladat()
+    private static void HetedikFeladat()
     {
-      int min = int.MaxValue;
-      int minnem = 0;
-      int max = int.MinValue;
-      int maxnem = 0;
+      Dictionary<int, int> tizenkilenc = new Dictionary<int, int>();
+      Dictionary<int, int> husz = new Dictionary<int, int>();
       foreach (var l in lista)
       {
-        if (Convert.ToInt32(l.szuletes.ToString().Substring(0,2))<min)
+        if (Convert.ToInt32(l.szuletes.Substring(0,2))>21)
         {
-          min = Convert.ToInt32(l.szuletes.ToString().Substring(0, 2));
-          minnem = l.nem;
+          if (!tizenkilenc.ContainsKey(Convert.ToInt32(l.szuletes.Substring(0, 2))))
+          {
+            tizenkilenc.Add(Convert.ToInt32(l.szuletes.Substring(0, 2)),1);
+          }
         }
-        else if (Convert.ToInt32(l.szuletes.ToString().Substring(0, 2)) > max)
+        else
         {
-          max = Convert.ToInt32(l.szuletes.ToString().Substring(0, 2));
-          maxnem= l.nem;
+          if (!husz.ContainsKey(Convert.ToInt32(l.szuletes.Substring(0, 2))))
+          {
+            husz.Add(Convert.ToInt32(l.szuletes.Substring(0, 2)), 1);
+          }
         }
       }
-      string kezdoev = minnem < 3 ? "19" : "20" + min.ToString();
-      string vegev = maxnem < 3 ? "19" : "20" + max.ToString();
-      Console.WriteLine($"A vizsgált időszak: {kezdoev} - {vegev}");
+      Console.WriteLine($"7.feladat: A vizsgált időszak: 19{tizenkilenc.Min(x=>x.Key)} - 200{husz.Max(x=>x.Key)}");
     }
 
     private static void HatodikFeladat()
@@ -77,18 +157,19 @@ namespace Vasmegye
 
     private static void OtodikFeladat()
     {
-      Console.WriteLine($"5. feladat: {osszes} db csecsemő született!");
+      Console.WriteLine($"5. feladat: {lista.Count} db csecsemő született!");
     }
 
     private static void NegyedikFeladat()
     {
-      Console.WriteLine("3.feladat:");
+      Console.WriteLine("4.feladat:");
       for (int i = 0; i < lista.Count; i++)
       {
         if (!CdvEll(lista[i]))
         {
           Console.WriteLine($"\tHibás a {lista[i].nem}-{lista[i].szuletes}-{lista[i].megkulonbozteto} személyi azonosító");
           lista.RemoveAt(i);
+          i--;
         }
       }
     }
@@ -119,7 +200,6 @@ namespace Vasmegye
       {
         return false;
       }
-      
     }
   }
 }
