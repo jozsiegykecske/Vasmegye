@@ -28,7 +28,7 @@ namespace Vasmegye
 
     private static void OtodikFeladat()
     {
-      Console.WriteLine($"5. feladat: {lista.Count} db csecsemő született!");
+      Console.WriteLine($"5. feladat: {osszes} db csecsemő született!");
     }
 
     private static void NegyedikFeladat()
